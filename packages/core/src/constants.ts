@@ -48,6 +48,7 @@ export const BUFFER_SIZES = {
 export const NETWORK = {
 	// Ports
 	DEFAULT_PORT: 8080,
+	DEFAULT_HOST: "localhost",
 
 	// Timeouts
 	IDLE_TIMEOUT_MAX: 255, // Max allowed by Bun

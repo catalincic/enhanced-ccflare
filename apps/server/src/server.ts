@@ -185,6 +185,7 @@ export default function startServer(options?: {
 
 	// Main server
 	serverInstance = serve({
+		hostname: runtime.hostname,
 		port: runtime.port,
 		idleTimeout: NETWORK.IDLE_TIMEOUT_MAX, // Max allowed by Bun
 		async fetch(req) {

@@ -19,6 +19,7 @@ export interface RuntimeConfig {
 	retry: { attempts: number; delayMs: number; backoff: number };
 	sessionDurationMs: number;
 	port: number;
+	hostname: string;
 }
 
 export interface ConfigData {
@@ -163,9 +164,13 @@ export class Config extends EventEmitter {
 			},
 			sessionDurationMs: TIME_CONSTANTS.SESSION_DURATION_DEFAULT,
 			port: NETWORK.DEFAULT_PORT,
+			hostname: NETWORK.DEFAULT_HOST,
 		};
 
 		// Override with environment variables if present
+		if (process.env.HOSTNAME) {
+			defaults.hostname = process.env.HOSTNAME;
+		}
 		if (process.env.CLIENT_ID) {
 			defaults.clientId = process.env.CLIENT_ID;
 		}
@@ -203,6 +208,9 @@ export class Config extends EventEmitter {
 		}
 		if (typeof this.data.port === "number") {
 			defaults.port = this.data.port;
+		}
+		if (this.data.hostname) {
+			defaults.hostname = this.data.hostname as string;
 		}
 
 		return defaults;

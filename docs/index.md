@@ -64,6 +64,7 @@ When working with Claude API at scale, rate limits can become a significant bott
 
 ### Operations
 - [Deployment Guide](./deployment.md) - Production deployment with Docker, systemd, PM2, and Kubernetes
+- [Reverse Proxy with Nginx](./reverse-proxy.md) - Secure your instance with Nginx
 - [Security Considerations](./security.md) - Authentication, encryption, and best practices
 - [Troubleshooting](./troubleshooting.md) - Common issues and solutions
 - [Contributing](./contributing.md) - Development setup and contribution guidelines
