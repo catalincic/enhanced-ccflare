@@ -132,9 +132,59 @@ At this point, you should be able to access `ccflare` at `http://claude.your-dom
     }
     ```
 
-## Step 4: Configure Your Clients
+## Step 4: (Recommended) Secure with an IP Whitelist
 
-Now, you can securely connect to your `ccflare` instance from anywhere. Update your client configuration to use the new HTTPS endpoint:
+To ensure that only you and your authorized services can access the proxy, you should configure Nginx to only allow traffic from a specific list of IP addresses.
+
+1.  Edit your Nginx configuration file again:
+
+    ```bash
+    sudo nano /etc/nginx/sites-available/ccflare
+    ```
+
+2.  Inside the `server` block for your HTTPS site (the one with `listen 443 ssl`), add the following lines. This will deny all traffic by default, then explicitly allow your specified IPs.
+
+    ```nginx
+    server {
+        server_name claude.your-domain.com;
+
+        # --- IP Whitelist ---
+        # Deny all traffic by default
+        deny all;
+        # Allow your home IP address
+        allow 198.51.100.10;
+        # Allow your office IP address
+        allow 203.0.113.25;
+        # Allow your cloud devcontainer's public IP
+        allow 192.0.2.100;
+        # --------------------
+
+        location / {
+            proxy_pass http://localhost:8080;
+            # ... rest of the location block
+        }
+
+        # ... rest of the server block
+    }
+    ```
+
+    **Important**:
+    - Replace the example IP addresses with your actual public IP addresses.
+    - The `deny all;` directive is crucial. It blocks everything, and the `allow` directives create exceptions to that rule.
+    - You can add as many `allow` lines as you need.
+
+3.  Test the configuration and restart Nginx:
+
+    ```bash
+    sudo nginx -t
+    sudo systemctl restart nginx
+    ```
+
+Now, only requests from the whitelisted IPs will be able to access your `ccflare` instance. All other connections will receive a `403 Forbidden` error.
+
+## Step 5: Configure Your Clients
+
+Now, you can securely connect to your `ccflare` instance from any of your whitelisted locations. Update your client configuration to use the new HTTPS endpoint:
 
 ```bash
 export ANTHROPIC_BASE_URL="https://claude.your-domain.com"
